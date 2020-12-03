@@ -14,7 +14,7 @@
 [Microsoft XNA Framework Redistributable 4.0](https://www.microsoft.com/en-us/download/details.aspx?id=20914).
 Interface languages: ru_ru
 
-&nbsp;
+#
 
 - Для Windows-версии требуется ОС Windows XP или новее, Framework 4.0 или новее,
 [Microsoft XNA Framework Redistributable 4.0](https://www.microsoft.com/en-us/download/details.aspx?id=20914).
