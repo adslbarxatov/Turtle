@@ -10,13 +10,11 @@
 
 ## Requirements / Требования
 
-Windows version requires Windows XP or newer, Framework 4.0 or newer,
-[Microsoft XNA Framework Redistributable 4.0](https://www.microsoft.com/en-us/download/details.aspx?id=20914).
-Interface languages: ru_ru
+- Windows XP or newer / или новее;
+- [Microsoft .NET Framework 4.0](https://www.microsoft.com/en-us/download/details.aspx?id=17718);
+- [Microsoft XNA Framework Redistributable 4.0](https://www.microsoft.com/en-us/download/details.aspx?id=20914).
 
-Для Windows-версии требуется ОС Windows XP или новее, Framework 4.0 или новее,
-[Microsoft XNA Framework Redistributable 4.0](https://www.microsoft.com/en-us/download/details.aspx?id=20914).
-Языки интерфейса: ru_ru
+Interface languages / языки интерфейса: ru_ru.
 
 &nbsp;
 
