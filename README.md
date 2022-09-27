@@ -10,7 +10,7 @@
 
 ## Requirements / Требования
 
-- Windows XP or newer / или новее;
+- Windows 7 or newer / или новее;
 - [Microsoft .NET Framework 4.0](https://microsoft.com/en-us/download/details.aspx?id=17718);
 - [Microsoft XNA Framework Redistributable 4.0](https://microsoft.com/en-us/download/details.aspx?id=20914).
 
