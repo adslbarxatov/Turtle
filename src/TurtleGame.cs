@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace RD_AAOW
 	{
@@ -60,7 +59,8 @@ namespace RD_AAOW
 		public const int RoadRight = RoadLeft + RoadLineWidth * LinesQuantity;
 
 		// Основное состояние игры (начало|игра|конец)
-		private GameStatus gameStatus = GameStatus.Start;   // Начальный статус игры (статусы перечислены в Auxilitary.cs)
+		private GameStatus gameStatus = GameStatus.Start;
+		// Начальный статус игры (статусы перечислены в Auxilitary.cs)
 
 		// Описатели уровня и окна сообщений
 		private TurtleLevel level;                          // Класс-описатель уровня
@@ -81,8 +81,11 @@ namespace RD_AAOW
 
 		// Текущие состояния всех машин и съедобных объектов (положение, направление, текстура и т.д.) 
 		// (структурные классы описаны в Level.cs)
-		private List<CarState> carPosition = new List<CarState> ();                     // List позиций всех машин на дороге
-		private List<EatableObjectState> eatable = new List<EatableObjectState> ();     // List позиций съедобных объектов
+
+		private List<CarState> carPosition = new List<CarState> ();
+		// List позиций всех машин на дороге
+		private List<EatableObjectState> eatable = new List<EatableObjectState> ();
+		// List позиций съедобных объектов
 
 		// Звуковые эффекты и их параметры
 		private SoundEffect SCompleted, SFailed,            // Победа, поражение
@@ -665,7 +668,7 @@ namespace RD_AAOW
 		private void ShowStartMessage ()
 			{
 			string S1 = ProgramDescription.AssemblyTitle,
-					S2 = ProgramDescription.AssemblyCopyright,
+					S2 = RDGenerics.AssemblyCopyright,
 					S6 = ProgramDescription.AssemblyLastUpdate,
 					S3 = "Нажмите Пробел для начала игры,\n",
 					S4 = "F1 для вывода справки",
@@ -977,29 +980,43 @@ namespace RD_AAOW
 		/// <param name="Write">Флаг режима записи настроек</param>
 		private void GameSettings (bool Write)
 			{
-			string FN = "C:\\Docume~1\\Alluse~1\\Applic~1\\Microsoft\\Windows\\TurtleGame.sav";
+			/*string FN = "C:\\Docume~1\\Alluse~1\\Applic~1\\Microsoft\\Windows\\TurtleGame.sav";*/
 
 			// Если требуется запись
 			if (Write)
 				{
-				Directory.CreateDirectory (FN.Substring (0, FN.Length - 14));
+				/*Directory.CreateDirectory (FN.Substring (0, FN.Length - 14));
 				StreamWriter FL = new StreamWriter (FN, false);
 
 				FL.Write ("{0:D}\n{1:D}\n{2:D}\n{3:D}", levelNumber, score, isMusic, isSound);
 
-				FL.Close ();
+				FL.Close ();*/
+
+				RDGenerics.SetAppSettingsValue ("Level", levelNumber.ToString ());
+				RDGenerics.SetAppSettingsValue ("Score", score.ToString ());
+				RDGenerics.SetAppSettingsValue ("Music", isMusic.ToString ());
+				RDGenerics.SetAppSettingsValue ("Sound", isSound.ToString ());
 				}
 			// Если требуется чтение, и файл при этом существует
-			else if (File.Exists (FN))
+			else /*if (File.Exists (FN))*/
 				{
-				StreamReader FL = new StreamReader (FN);
+				/*StreamReader FL = new StreamReader (FN);
 
 				levelNumber = int.Parse (FL.ReadLine ());
 				score = int.Parse (FL.ReadLine ());
 				isMusic = bool.Parse (FL.ReadLine ());
 				isSound = bool.Parse (FL.ReadLine ());
 
-				FL.Close ();
+				FL.Close ();*/
+
+				try
+					{
+					levelNumber = int.Parse (RDGenerics.GetAppSettingsValue ("Level"));
+					score = int.Parse (RDGenerics.GetAppSettingsValue ("Score"));
+					isMusic = bool.Parse (RDGenerics.GetAppSettingsValue ("Music"));
+					isSound = bool.Parse (RDGenerics.GetAppSettingsValue ("Sound"));
+					}
+				catch { }
 				}
 			}
 

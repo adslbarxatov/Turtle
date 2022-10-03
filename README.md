@@ -1,18 +1,19 @@
-# Turtle v 1.7.15
-> PCC: 00A933F138A66F53
+# Turtle v 2.0
+> PCC: 023E8743D93B690F
 
 
-“Turtle” game – a sample project for XNA game studio
+“Turtle” game – a sample project for MonoGame Framework
 
-Игра «Черепашка» – учебный проект для XNA game studio
+Игра «Черепашка» – учебный проект для MonoGame Framework
 
 #
 
 ## Requirements / Требования
 
 - Windows 7 or newer / или новее;
-- [Microsoft .NET Framework 4.0](https://microsoft.com/en-us/download/details.aspx?id=17718);
-- [Microsoft XNA Framework Redistributable 4.0](https://microsoft.com/en-us/download/details.aspx?id=20914).
+- [Microsoft .NET Framework 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-6.0.9-windows-x86-installer);
+- MonoGame Framework (included into the package);
+- Actual update for [DirectX](https://microsoft.com/en-us/download/confirmation.aspx?id=35).
 
 Interface languages / языки интерфейса: ru_ru.
 

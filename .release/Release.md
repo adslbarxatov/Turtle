@@ -1,4 +1,4 @@
-_Changes for v 1.7.15_:
-- Package requirements update;
-- Publication on GitHub;
-- Re-assembly of an old version
+_Changes for v 2.0_:
+- App has been rebuilt under MonoGame Framework + .NET Framework 6.0;
+- App settings have been moved to Windows registry;
+- Package requirements update

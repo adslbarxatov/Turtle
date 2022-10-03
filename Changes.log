@@ -1,5 +1,9 @@
 Turtle game changes log
 
+Version 2.0:
+• App has been rebuilt under MonoGame Framework + .NET Framework 6.0;
+• App settings have been moved to Windows registry
+
 Version 1.7.15:
 • Package requirements update
 
