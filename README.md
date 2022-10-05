@@ -12,7 +12,7 @@
 
 - Windows 7 or newer / или новее;
 - [Microsoft .NET Framework 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-6.0.9-windows-x86-installer);
-- MonoGame Framework (included into the package);
+- [MonoGame Framework](https://monogame.net) (included in the package / включено в пакет);
 - Actual update for [DirectX](https://microsoft.com/en-us/download/confirmation.aspx?id=35).
 
 Interface languages / языки интерфейса: ru_ru.
