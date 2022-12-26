@@ -2,6 +2,7 @@
 > PCC: 023E8743D93B690F
 
 
+
 “Turtle” game – a sample project for MonoGame Framework
 
 Игра «Черепашка» – учебный проект для MonoGame Framework
