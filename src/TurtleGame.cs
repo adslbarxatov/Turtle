@@ -363,6 +363,14 @@ namespace RD_AAOW
 						return true;
 						}
 
+					// Выбор языка интерфеса
+					if (keyboardState.IsKeyDown (Keys.L))
+						{
+						gameStatus = GameStatus.Language;
+
+						return true;
+						}
+
 					// Переход далее
 					if (keyboardState.IsKeyDown (Keys.Space))
 						{
@@ -380,6 +388,7 @@ namespace RD_AAOW
 
 				//////////////////////////////////////////////////////////////////
 				case GameStatus.Help:
+				case GameStatus.Language:
 					// Возврат
 					if (keyboardState.IsKeyDown (Keys.Escape))
 						{
@@ -557,21 +566,32 @@ namespace RD_AAOW
 		/// </summary>
 		private void DrawInfo ()
 			{
+			// Сборка строк
+			if (string.IsNullOrWhiteSpace (stScoreLines[0]))
+				{
+				string[] values = Localization.GetText ("ScoreLines").Split (splitter,
+					StringSplitOptions.RemoveEmptyEntries);
+				for (int i = 0; i < stScoreLines.Length; i++)
+					stScoreLines[i] = values[i];
+				}
+
 			// Строки для отображения
-			string S1, S2 = String.Format (" Очки: {0,10:D} ", score);
+			/*string S1, S2 = String.Format (" Очки: {0,10:D} ", score);
 			if (isWorking)
 				S1 = String.Format (" УРОВЕНЬ {0,2:D} ", levelNumber + 1);
 			else
-				S1 = " ПАУЗА ";
+				S1 = " ПАУЗА ";*/
+			string S00 = string.Format (stScoreLines[0], score);
+			string S01 = isWorking ? string.Format (stScoreLines[1], levelNumber + 1) : stScoreLines[2];
 
 			// Векторы позиций для отображения элементов, учитывающие смещение камеры наблюдения
-			Vector2 V1 = new Vector2 (16, 16) + level.CameraPosition,
-					V2 = new Vector2 (16, 54) + level.CameraPosition,
+			Vector2 V1 = new Vector2 (12, 16) + level.CameraPosition,
+					V2 = new Vector2 (12, 54) + level.CameraPosition,
 					V3 = new Vector2 (BackBufferWidth * 0.92f, BackBufferHeight - 32) + level.CameraPosition,
 					V4 = new Vector2 (BackBufferWidth * 0.95f, BackBufferHeight - 32) + level.CameraPosition;
 
-			DrawShadowedString (midFont, S1, V1, TurtleGameColors.Orange);
-			DrawShadowedString (midFont, S2, V2, TurtleGameColors.Yellow);
+			DrawShadowedString (midFont, S00, V1, TurtleGameColors.Orange);
+			DrawShadowedString (midFont, S01, V2, TurtleGameColors.Yellow);
 
 			// Если есть музыка или звук, выводить соответствующий знак
 			if (isMusic)
@@ -584,167 +604,260 @@ namespace RD_AAOW
 			else
 				DrawShadowedString (defFont, "[\x266A]", V4, TurtleGameColors.Black);
 			}
+		private string[] stScoreLines = new string[3];
+		private char[] splitter = new char[] { '\t' };
 
 		/// <summary>
 		/// Отображение сообщения об уровне
 		/// </summary>
 		private void ShowLevelMessage ()
 			{
-			string S1 = string.Format ("УРОВЕНЬ {0,2:D}", levelNumber + 1),
-					S2 = "Нажмите Пробел,",
-					S3 = "чтобы начать";
+			// Сборка строк
+			if (string.IsNullOrWhiteSpace (stLevelLines[0]))
+				{
+				string[] values = Localization.GetText ("LevelLines").Split (splitter,
+					StringSplitOptions.RemoveEmptyEntries);
+				for (int i = 0; i < stLevelLines.Length; i++)
+					stLevelLines[i] = values[i];
+				}
 
-			Vector2 V1 = new Vector2 ((BackBufferWidth - midFont.MeasureString (S1).X) / 2,
+			string S00 = string.Format (stLevelLines[0], levelNumber + 1);
+			/*string S1 = string.Format ("УРОВЕНЬ {0,2:D}", levelNumber + 1),
+					S2 = "Нажмите Пробел,",
+					S3 = "чтобы начать";*/
+
+			Vector2 V1 = new Vector2 ((BackBufferWidth - midFont.MeasureString (S00).X) / 2,
 						(BackBufferHeight - 180) / 2) + level.CameraPosition,
-					V2 = new Vector2 ((BackBufferWidth - defFont.MeasureString (S2).X) / 2,
+					V2 = new Vector2 ((BackBufferWidth - defFont.MeasureString (stLevelLines[1]).X) / 2,
 						(BackBufferHeight + 60) / 2) + level.CameraPosition,
-					V3 = new Vector2 ((BackBufferWidth - defFont.MeasureString (S3).X) / 2,
+					V3 = new Vector2 ((BackBufferWidth - defFont.MeasureString (stLevelLines[2]).X) / 2,
 						(BackBufferHeight + 110) / 2) + level.CameraPosition;
 
 			spriteBatch.Draw (messageBack, GameAuxFunctions.CenterOf (messageBackLeftTop, level.CameraPosition),
 				TurtleGameColors.LBlue_B);
-			spriteBatch.DrawString (midFont, S1, V1, TurtleGameColors.LBlue);
-			spriteBatch.DrawString (defFont, S2, V2, TurtleGameColors.Orange);
-			spriteBatch.DrawString (defFont, S3, V3, TurtleGameColors.Orange);
+			spriteBatch.DrawString (midFont, S00, V1, TurtleGameColors.LBlue);
+			spriteBatch.DrawString (defFont, stLevelLines[1], V2, TurtleGameColors.Orange);
+			spriteBatch.DrawString (defFont, stLevelLines[2], V3, TurtleGameColors.Orange);
 			}
+		private string[] stLevelLines = new string[3];
 
 		/// <summary>
 		/// Отображение сообщения о победе
 		/// </summary>
 		private void ShowWinMessage ()
 			{
-			string S1 = "УРОВЕНЬ",
+			// Сборка строк
+			if (string.IsNullOrWhiteSpace (stSuccessLines[0]))
+				{
+				string[] values = Localization.GetText ("SuccessLines").Split (splitter,
+					StringSplitOptions.RemoveEmptyEntries);
+				for (int i = 0; i < stSuccessLines.Length; i++)
+					stSuccessLines[i] = values[i];
+				}
+
+			/*string S1 = "УРОВЕНЬ",
 					S2 = "ПРОЙДЕН!",
 					S3 = "Нажмите Пробел",
-					S4 = "для продолжения";
+					S4 = "для продолжения";*/
 
-			Vector2 V1 = new Vector2 ((BackBufferWidth - midFont.MeasureString (S1).X) / 2,
+			Vector2 V1 = new Vector2 ((BackBufferWidth - midFont.MeasureString (stSuccessLines[0]).X) / 2,
 						(BackBufferHeight - 180) / 2) + level.CameraPosition,
-					V2 = new Vector2 ((BackBufferWidth - midFont.MeasureString (S2).X) / 2,
+					V2 = new Vector2 ((BackBufferWidth - midFont.MeasureString (stSuccessLines[1]).X) / 2,
 						(BackBufferHeight - 110) / 2) + level.CameraPosition,
-					V3 = new Vector2 ((BackBufferWidth - defFont.MeasureString (S3).X) / 2,
+					V3 = new Vector2 ((BackBufferWidth - defFont.MeasureString (stSuccessLines[2]).X) / 2,
 						(BackBufferHeight + 60) / 2) + level.CameraPosition,
-					V4 = new Vector2 ((BackBufferWidth - defFont.MeasureString (S4).X) / 2,
+					V4 = new Vector2 ((BackBufferWidth - defFont.MeasureString (stSuccessLines[3]).X) / 2,
 						(BackBufferHeight + 110) / 2) + level.CameraPosition;
 
 			spriteBatch.Draw (messageBack, GameAuxFunctions.CenterOf (messageBackLeftTop, level.CameraPosition),
 				TurtleGameColors.Green_B);
-			spriteBatch.DrawString (midFont, S1, V1, TurtleGameColors.Green);
-			spriteBatch.DrawString (midFont, S2, V2, TurtleGameColors.Green);
-			spriteBatch.DrawString (defFont, S3, V3, TurtleGameColors.Orange);
-			spriteBatch.DrawString (defFont, S4, V4, TurtleGameColors.Orange);
+			spriteBatch.DrawString (midFont, stSuccessLines[0], V1, TurtleGameColors.Green);
+			spriteBatch.DrawString (midFont, stSuccessLines[1], V2, TurtleGameColors.Green);
+			spriteBatch.DrawString (defFont, stSuccessLines[2], V3, TurtleGameColors.Orange);
+			spriteBatch.DrawString (defFont, stSuccessLines[3], V4, TurtleGameColors.Orange);
 			}
+		private string[] stSuccessLines = new string[4];
 
 		/// <summary>
 		/// Отображение сообщения о проигрыше
 		/// </summary>
 		private void ShowLoseMessage ()
 			{
-			string S1 = "УРОВЕНЬ",
+			// Сборка строк
+			if (string.IsNullOrWhiteSpace (stLoseLines[0]))
+				{
+				string[] values = Localization.GetText ("LoseLines").Split (splitter,
+					StringSplitOptions.RemoveEmptyEntries);
+				for (int i = 0; i < stLoseLines.Length; i++)
+					stLoseLines[i] = values[i];
+				}
+
+			/*string S1 = "УРОВЕНЬ",
 					S2 = "НЕ ПРОЙДЕН!",
 					S3 = "Нажмите Пробел,",
-					S4 = "чтобы попробовать снова";
+					S4 = "чтобы попробовать снова";*/
 
-			Vector2 V1 = new Vector2 ((BackBufferWidth - midFont.MeasureString (S1).X) / 2,
+			Vector2 V1 = new Vector2 ((BackBufferWidth - midFont.MeasureString (stLoseLines[0]).X) / 2,
 						(BackBufferHeight - 180) / 2) + level.CameraPosition,
-					V2 = new Vector2 ((BackBufferWidth - midFont.MeasureString (S2).X) / 2,
+					V2 = new Vector2 ((BackBufferWidth - midFont.MeasureString (stLoseLines[1]).X) / 2,
 						(BackBufferHeight - 110) / 2) + level.CameraPosition,
-					V3 = new Vector2 ((BackBufferWidth - defFont.MeasureString (S3).X) / 2,
+					V3 = new Vector2 ((BackBufferWidth - defFont.MeasureString (stLoseLines[2]).X) / 2,
 						(BackBufferHeight + 60) / 2) + level.CameraPosition,
-			V4 = new Vector2 ((BackBufferWidth - defFont.MeasureString (S4).X) / 2,
-				(BackBufferHeight + 110) / 2) + level.CameraPosition;
+					V4 = new Vector2 ((BackBufferWidth - defFont.MeasureString (stLoseLines[3]).X) / 2,
+						(BackBufferHeight + 110) / 2) + level.CameraPosition;
 
 			spriteBatch.Draw (messageBack, GameAuxFunctions.CenterOf (messageBackLeftTop, level.CameraPosition),
 				TurtleGameColors.Red_B);
-			spriteBatch.DrawString (midFont, S1, V1, TurtleGameColors.Red);
-			spriteBatch.DrawString (midFont, S2, V2, TurtleGameColors.Red);
-			spriteBatch.DrawString (defFont, S3, V3, TurtleGameColors.Orange);
-			spriteBatch.DrawString (defFont, S4, V4, TurtleGameColors.Orange);
+			spriteBatch.DrawString (midFont, stLoseLines[0], V1, TurtleGameColors.Red);
+			spriteBatch.DrawString (midFont, stLoseLines[1], V2, TurtleGameColors.Red);
+			spriteBatch.DrawString (defFont, stLoseLines[2], V3, TurtleGameColors.Orange);
+			spriteBatch.DrawString (defFont, stLoseLines[3], V4, TurtleGameColors.Orange);
 			}
+		private string[] stLoseLines = new string[4];
 
 		/// <summary>
 		/// Отображение сообщения о начале игры
 		/// </summary>
 		private void ShowStartMessage ()
 			{
-			string S1 = ProgramDescription.AssemblyTitle,
+			// Сборка строк
+			if (string.IsNullOrWhiteSpace (stStartLines[0]))
+				{
+				string[] values = Localization.GetText ("StartLines").Split (splitter,
+					StringSplitOptions.RemoveEmptyEntries);
+				for (int i = 0; i < stStartLines.Length - 1; i++)
+					stStartLines[i] = values[i];
+				stStartLines[3] = ProgramDescription.AssemblyTitle;
+				}
+
+			/*string S1 = ProgramDescription.AssemblyTitle,
 					S2 = RDGenerics.AssemblyCopyright,
 					S6 = ProgramDescription.AssemblyLastUpdate,
 					S3 = "Нажмите Пробел для начала игры,\n",
 					S4 = "F1 для вывода справки",
-					S5 = "или Esc для выхода";
+					S5 = "или Esc для выхода";*/
 
-			Vector2 V1 = new Vector2 ((BackBufferWidth - bigFont.MeasureString (S1).X) / 2,
+			Vector2 V1 = new Vector2 ((BackBufferWidth - bigFont.MeasureString (stStartLines[3]).X) / 2,
 						120),
-					V2 = new Vector2 (BackBufferWidth - defFont.MeasureString (S6).X - 20,
+					/*V2 = new Vector2 (BackBufferWidth - defFont.MeasureString (S6).X - 20,
 						BackBufferHeight - 70),
 					V6 = new Vector2 (BackBufferWidth - defFont.MeasureString (S6).X - 20,
-						BackBufferHeight - 40),
-					V3 = new Vector2 ((BackBufferWidth - defFont.MeasureString (S3).X) / 2,
+						BackBufferHeight - 40),*/
+					V3 = new Vector2 ((BackBufferWidth - defFont.MeasureString (stStartLines[0]).X) / 2,
 						BackBufferHeight / 2),
-					V4 = new Vector2 ((BackBufferWidth - defFont.MeasureString (S4).X) / 2,
+					V4 = new Vector2 ((BackBufferWidth - defFont.MeasureString (stStartLines[1]).X) / 2,
 						BackBufferHeight / 2 + 30),
-					V5 = new Vector2 ((BackBufferWidth - defFont.MeasureString (S5).X) / 2,
+					V5 = new Vector2 ((BackBufferWidth - defFont.MeasureString (stStartLines[2]).X) / 2,
 						BackBufferHeight / 2 + 60);
 
 			spriteBatch.Draw (startBack, Vector2.Zero, TurtleGameColors.White);
-			DrawShadowedString (bigFont, S1, V1, TurtleGameColors.Orange);
-			DrawShadowedString (defFont, S2, V2, TurtleGameColors.Yellow);
-			DrawShadowedString (defFont, S6, V6, TurtleGameColors.Yellow);
-			DrawShadowedString (defFont, S3, V3, TurtleGameColors.White);
-			DrawShadowedString (defFont, S4, V4, TurtleGameColors.White);
-			DrawShadowedString (defFont, S5, V5, TurtleGameColors.White);
+			DrawShadowedString (bigFont, stStartLines[3], V1, TurtleGameColors.Orange);
+			/*DrawShadowedString (defFont, S2, V2, TurtleGameColors.Yellow);
+			DrawShadowedString (defFont, S6, V6, TurtleGameColors.Yellow);*/
+			DrawShadowedString (defFont, stStartLines[0], V3, TurtleGameColors.White);
+			DrawShadowedString (defFont, stStartLines[1], V4, TurtleGameColors.White);
+			DrawShadowedString (defFont, stStartLines[2], V5, TurtleGameColors.White);
 			}
+		private string[] stStartLines = new string[4];
 
 		/// <summary>
 		/// Отображение сообщения о конце игры
 		/// </summary>
 		private void ShowFinishMessage ()
 			{
-			string S1 = "ВЫ ПОБЕДИЛИ!!!",
-					S2 = string.Format ("Ваш выигрыш: {0,10:D} очков", score),
-					S3 = "Нажмите Пробел для продолжения";
+			// Сборка строк
+			if (string.IsNullOrWhiteSpace (stFinishLines[0]))
+				{
+				string[] values = Localization.GetText ("FinishLines").Split (splitter,
+					StringSplitOptions.RemoveEmptyEntries);
+				for (int i = 0; i < stFinishLines.Length; i++)
+					stFinishLines[i] = values[i];
+				}
 
-			Vector2 V1 = new Vector2 ((BackBufferWidth - bigFont.MeasureString (S1).X) / 2,
+			/*string S1 = "ВЫ ПОБЕДИЛИ!!!",
+					S2 = string.Format ("Ваш выигрыш: {0,10:D} очков", score),
+					S3 = "Нажмите Пробел для продолжения";*/
+			string S01 = string.Format (stFinishLines[1], score);
+
+			Vector2 V1 = new Vector2 ((BackBufferWidth - bigFont.MeasureString (stFinishLines[0]).X) / 2,
 						(BackBufferHeight - 400) / 2),
-					V2 = new Vector2 ((BackBufferWidth - midFont.MeasureString (S2).X) / 2,
+					V2 = new Vector2 ((BackBufferWidth - midFont.MeasureString (S01).X) / 2,
 						(BackBufferHeight - 50) / 2),
-					V3 = new Vector2 ((BackBufferWidth - defFont.MeasureString (S3).X) / 2,
+					V3 = new Vector2 ((BackBufferWidth - defFont.MeasureString (stFinishLines[2]).X) / 2,
 						(BackBufferHeight + 100) / 2);
 
 			spriteBatch.Draw (startBack, Vector2.Zero, TurtleGameColors.White);
-			spriteBatch.DrawString (bigFont, S1, V1, TurtleGameColors.Orange);
-			spriteBatch.DrawString (midFont, S2, V2, TurtleGameColors.Brown);
-			spriteBatch.DrawString (defFont, S3, V3, TurtleGameColors.DBlue);
+			spriteBatch.DrawString (bigFont, stFinishLines[0], V1, TurtleGameColors.Orange);
+			spriteBatch.DrawString (midFont, S01, V2, TurtleGameColors.Red);
+			spriteBatch.DrawString (defFont, stFinishLines[2], V3, TurtleGameColors.DBlue);
 			}
+		private string[] stFinishLines = new string[3];
 
 		/// <summary>
 		/// Отображение запроса на подтверждение выхода
 		/// </summary>
 		private void ShowExitMessage ()
 			{
-			string S1 = "Вы действительно хотите",
+			// Сборка строк
+			if (string.IsNullOrWhiteSpace (stExitLines[0]))
+				{
+				string[] values = Localization.GetText ("ExitLines").Split (splitter,
+					StringSplitOptions.RemoveEmptyEntries);
+				for (int i = 0; i < stExitLines.Length; i++)
+					stExitLines[i] = values[i];
+				}
+
+			/*string S1 = "Вы действительно хотите",
 					S2 = "завершить игру?",
 					S3 = "Нажмите Y, чтобы выйти из игры,",
-					S4 = "или N, чтобы вернуться";
+					S4 = "или N, чтобы вернуться";*/
 
-			Vector2 V1 = new Vector2 ((BackBufferWidth - midFont.MeasureString (S1).X) / 2,
+			Vector2 V1 = new Vector2 ((BackBufferWidth - midFont.MeasureString (stExitLines[0]).X) / 2,
 						(BackBufferHeight - 180) / 2) + level.CameraPosition,
-					V2 = new Vector2 ((BackBufferWidth - midFont.MeasureString (S2).X) / 2,
+					V2 = new Vector2 ((BackBufferWidth - midFont.MeasureString (stExitLines[1]).X) / 2,
 						(BackBufferHeight - 110) / 2) + level.CameraPosition,
-					V3 = new Vector2 ((BackBufferWidth - defFont.MeasureString (S3).X) / 2,
+					V3 = new Vector2 ((BackBufferWidth - defFont.MeasureString (stExitLines[2]).X) / 2,
 						(BackBufferHeight + 70) / 2) + level.CameraPosition,
-					V4 = new Vector2 ((BackBufferWidth - defFont.MeasureString (S4).X) / 2,
+					V4 = new Vector2 ((BackBufferWidth - defFont.MeasureString (stExitLines[3]).X) / 2,
 						(BackBufferHeight + 110) / 2) + level.CameraPosition;
 
 			spriteBatch.Draw (messageBack, GameAuxFunctions.CenterOf (messageBackLeftTop, level.CameraPosition),
 				TurtleGameColors.Yellow_B);
-			spriteBatch.DrawString (midFont, S1, V1, TurtleGameColors.Yellow);
-			spriteBatch.DrawString (midFont, S2, V2, TurtleGameColors.Yellow);
-			spriteBatch.DrawString (defFont, S3, V3, TurtleGameColors.Orange);
-			spriteBatch.DrawString (defFont, S4, V4, TurtleGameColors.Orange);
+			spriteBatch.DrawString (midFont, stExitLines[0], V1, TurtleGameColors.Yellow);
+			spriteBatch.DrawString (midFont, stExitLines[1], V2, TurtleGameColors.Yellow);
+			spriteBatch.DrawString (defFont, stExitLines[2], V3, TurtleGameColors.Orange);
+			spriteBatch.DrawString (defFont, stExitLines[3], V4, TurtleGameColors.Orange);
 			}
+		private string[] stExitLines = new string[4];
 
+		/// <summary>
+		/// Отображение вспомогательных интерфейсов
+		/// </summary>
+		private void ShowServiceMessage (bool Language)
+			{
+			// Защита от множественного входа
+			if (showingServiceMessage)
+				return;
+			showingServiceMessage = true;
+
+			// Блокировка отрисовки и запуск справки
+			spriteBatch.End ();
+
+			if (Language)
+				RDGenerics.MessageBox ();
+			else
+				RDGenerics.ShowAbout (false);
+
+			// Возврат в исходное состояние
+			spriteBatch.Begin ();
+
+			// Выход в меню
+			gameStatus = GameStatus.Start;
+			showingServiceMessage = false;
+			}
+		private bool showingServiceMessage = false;
+
+		/*
 		/// <summary>
 		/// Отображение справки
 		/// </summary>
@@ -780,6 +893,7 @@ namespace RD_AAOW
 			spriteBatch.DrawString (midFont, S4, V4, TurtleGameColors.White);
 			spriteBatch.DrawString (defFont, S5, V5, TurtleGameColors.White);
 			}
+		*/
 
 		/// <summary>
 		/// Метод отрисовывает уровень игры
@@ -803,8 +917,11 @@ namespace RD_AAOW
 
 				//////////////////////////////////////////////////////////////////
 				case GameStatus.Help:
-					ShowHelpMessage ();
+					ShowServiceMessage (false);
+					break;
 
+				case GameStatus.Language:
+					ShowServiceMessage (true);
 					break;
 
 				//////////////////////////////////////////////////////////////////
@@ -980,35 +1097,17 @@ namespace RD_AAOW
 		/// <param name="Write">Флаг режима записи настроек</param>
 		private void GameSettings (bool Write)
 			{
-			/*string FN = "C:\\Docume~1\\Alluse~1\\Applic~1\\Microsoft\\Windows\\TurtleGame.sav";*/
-
 			// Если требуется запись
 			if (Write)
 				{
-				/*Directory.CreateDirectory (FN.Substring (0, FN.Length - 14));
-				StreamWriter FL = new StreamWriter (FN, false);
-
-				FL.Write ("{0:D}\n{1:D}\n{2:D}\n{3:D}", levelNumber, score, isMusic, isSound);
-
-				FL.Close ();*/
-
 				RDGenerics.SetAppSettingsValue ("Level", levelNumber.ToString ());
 				RDGenerics.SetAppSettingsValue ("Score", score.ToString ());
 				RDGenerics.SetAppSettingsValue ("Music", isMusic.ToString ());
 				RDGenerics.SetAppSettingsValue ("Sound", isSound.ToString ());
 				}
 			// Если требуется чтение, и файл при этом существует
-			else /*if (File.Exists (FN))*/
+			else
 				{
-				/*StreamReader FL = new StreamReader (FN);
-
-				levelNumber = int.Parse (FL.ReadLine ());
-				score = int.Parse (FL.ReadLine ());
-				isMusic = bool.Parse (FL.ReadLine ());
-				isSound = bool.Parse (FL.ReadLine ());
-
-				FL.Close ();*/
-
 				try
 					{
 					levelNumber = int.Parse (RDGenerics.GetAppSettingsValue ("Level"));

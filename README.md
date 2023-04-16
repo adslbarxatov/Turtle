@@ -1,5 +1,5 @@
-# Turtle v 2.0 
-> PCC: 023E8743D93B690F
+# Turtle v 2.1
+> PCC: 0240996ED2CC9860
 
 
 
@@ -16,7 +16,7 @@
 - [MonoGame Framework](https://monogame.net) (included in the package / включено в пакет);
 - Actual update for [DirectX](https://microsoft.com/en-us/download/confirmation.aspx?id=35).
 
-Interface languages / языки интерфейса: ru_ru.
+Interface languages / языки интерфейса: en_us, ru_ru.
 
 &nbsp;
 

@@ -14,6 +14,11 @@ namespace RD_AAOW
 		Start = 0,
 
 		/// <summary>
+		/// Выбор языка
+		/// </summary>
+		Language = 4,
+
+		/// <summary>
 		/// Отображение справки
 		/// </summary>
 		Help = 1,
@@ -262,7 +267,7 @@ namespace RD_AAOW
 	/// </summary>
 	public struct RacesGameColors
 		{
-		public static Color Red = new Color (255, 0, 0),
+		public static Color Red = new Color (255, 32, 0),
 							Yellow = new Color (255, 255, 0),
 							Orange = new Color (255, 128, 0),
 							Green = new Color (0, 255, 128),
@@ -278,7 +283,7 @@ namespace RD_AAOW
 		{
 		private const float m = 0.7f;
 
-		public static Color Red = new Color (255, 0, 0),
+		public static Color Red = new Color (255, 32, 0),
 							Yellow = new Color (255, 255, 0),
 							Orange = new Color (255, 128, 0),
 							Brown = new Color (160, 40, 40),
