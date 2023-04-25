@@ -199,7 +199,6 @@ namespace RD_AAOW
 		/// <summary>
 		/// Метод обновляет состояние игры в реальном времени
 		/// </summary>
-		/// <param name="VGameTime"></param>
 		protected override void Update (GameTime VGameTime)
 			{
 			// Опрос клавиатуры с предотвращением повторов
@@ -224,78 +223,83 @@ namespace RD_AAOW
 				{
 				//////////////////////////////////////////////////////////////////
 				case GameStatus.Playing:
-					if (isAlive)
+					if (!isAlive)
+						break;
+
+					// Выигрыш (запуск нового уровня с паузой)
+					if (playerPosition.X > level.Background.Width - playerAnimation.FrameWidth / 2)
 						{
-						// Выигрыш (запуск нового уровня с паузой)
-						if (playerPosition.X > level.Background.Width - playerAnimation.FrameWidth / 2)
+						// Звук
+						MediaPlayer.Stop ();
+						if (isSound)
+							SCompleted.Play ();
+
+						// Отображение сообщения
+						showWinMsg = true;
+
+						// Переключение параметров
+						isAlive = isWorking = false;
+						playerAnimator.PlayAnimation (playerStayAnimation);
+
+						// Перезапуск уровня произойдёт по нажатию клавиши
+						}
+
+					// Движение всех машин
+					if (isWorking)
+						{
+						for (int i = 0; i < carPosition.Count; i++)
 							{
-							// Звук
-							MediaPlayer.Stop ();
-							if (isSound)
-								SCompleted.Play ();
+							// Смещение
+							carPosition[i].CurrentPosition += carPosition[i].MoveTo * carPosition[i].Speed;
 
-							// Отображение сообщения
-							showWinMsg = true;
-
-							// Переключение параметров
-							isAlive = isWorking = false;
-							playerAnimator.PlayAnimation (playerStayAnimation);
-
-							// Перезапуск уровня произойдёт по нажатию клавиши
+							// Выход за границы уровня
+							if ((carPosition[i].CurrentPosition.Y < -CarState.DefaultHeight) ||
+								(carPosition[i].CurrentPosition.Y > TurtleGame.GameFieldBottom + CarState.DefaultHeight))
+								// При выходе за границы уровня машина удаляется из массива, а вместо неё
+								// создаётся новая, но с той же скоростью и на той же полосе
+								carPosition[i].CurrentPosition = carPosition[i].StartPosition;
 							}
+						}
 
-						// Движение всех машин
-						if (isWorking)
-							{
-							for (int i = 0; i < carPosition.Count; i++)
-								{
-								// Смещение
-								carPosition[i].CurrentPosition += carPosition[i].MoveTo * carPosition[i].Speed;
+					// Проверка столкновений с машинами
+					if (IsCollapted ())
+						{
+						// Звук
+						MediaPlayer.Stop ();
+						if (isSound)
+							SFailed.Play ((90 + rnd.Next (10)) * 0.01f,
+							(20 - rnd.Next (40)) * 0.01f, 
+							(playerPosition.X - BackBufferWidth / 2.0f) / (BackBufferWidth / 2.0f));
 
-								// Выход за границы уровня
-								if ((carPosition[i].CurrentPosition.Y < -CarState.DefaultHeight) ||
-									(carPosition[i].CurrentPosition.Y > TurtleGame.GameFieldBottom + CarState.DefaultHeight))
-									// При выходе за границы уровня машина удаляется из массива, а вместо неё
-									// создаётся новая, но с той же скоростью и на той же полосе
-									carPosition[i].CurrentPosition = carPosition[i].StartPosition;
-								}
-							}
+						// Переключение состояния игры
+						isAlive = isWorking = false;
+						levelNumber--;
+						playerAnimator.PlayAnimation (deadAnimation);
 
-						// Проверка столкновений с машинами
-						if (IsCollapted ())
-							{
-							// Звук
-							MediaPlayer.Stop ();
-							if (isSound)
-								SFailed.Play ();
+						// Отображение сообщения
+						showLoseMsg = true;
 
-							// Переключение состояния игры
-							isAlive = isWorking = false;
-							levelNumber--;
-							playerAnimator.PlayAnimation (deadAnimation);
+						// Пересчёт очков
+						score -= penalty;           // Размер штрафа
 
-							// Отображение сообщения
-							showLoseMsg = true;
+						// Перезапуск уровня произойдёт по нажатию клавиши Space
+						}
 
-							// Пересчёт очков
-							score -= penalty;           // Размер штрафа
+					// Проверка съедений
+					Vector2 k = IsAte ();
+					if (k.X != -1.0f)
+						{
+						// Удаление съеденного объекта
+						eatable.RemoveAt ((int)k.X);
 
-							// Перезапуск уровня произойдёт по нажатию клавиши Space
-							}
+						// Пересчёт очков
+						score += (int)((k.Y + 1.0f) * scoreMultiplier);
 
-						// Проверка съедений
-						Vector2 k = IsAte ();
-						if (k.X != -1.0f)
-							{
-							// Удаление съеденного объекта
-							eatable.RemoveAt ((int)k.X);
-
-							// Пересчёт очков
-							score += (int)((k.Y + 1.0f) * scoreMultiplier);
-
-							// Звук
-							SAte.Play ();
-							}
+						// Звук
+						if (isSound)
+							SAte.Play ((90 + rnd.Next (10)) * 0.01f,
+							(20 - rnd.Next (40)) * 0.01f,
+							(playerPosition.X - BackBufferWidth / 2.0f) / (BackBufferWidth / 2.0f));
 						}
 
 					break;
@@ -504,7 +508,7 @@ namespace RD_AAOW
 				// Второе условие отвечает на нахождение черепахи всегда внутри поля игры
 				// Третье условие отвечает за невозможность разворота на месте
 				if (keyboardState.IsKeyDown (Keys.Up) &&
-					(playerPosition.Y - turtleSpeed >= playerAnimation.FrameWidth / 2) /*&& (PlayerTo.Y != 1)*/)
+					(playerPosition.Y - turtleSpeed >= playerAnimation.FrameWidth / 2))
 					{
 					// Смена вектора для текстуры
 					playerPosition.Y -= turtleSpeed;
@@ -518,8 +522,7 @@ namespace RD_AAOW
 
 				// ВНИЗ
 				if (keyboardState.IsKeyDown (Keys.Down) &&
-					(playerPosition.Y + turtleSpeed <= TurtleGame.GameFieldBottom - playerAnimation.FrameWidth / 2)
-						/*&& (PlayerTo.Y != -1)*/)
+					(playerPosition.Y + turtleSpeed <= TurtleGame.GameFieldBottom - playerAnimation.FrameWidth / 2))
 					{
 					playerPosition.Y += turtleSpeed;
 					playerTo.X = 0;
@@ -531,7 +534,7 @@ namespace RD_AAOW
 
 				// ВЛЕВО
 				if (keyboardState.IsKeyDown (Keys.Left) &&
-					(playerPosition.X - turtleSpeed >= playerAnimation.FrameWidth / 2) /*&& (PlayerTo.X != 1)*/)
+					(playerPosition.X - turtleSpeed >= playerAnimation.FrameWidth / 2))
 					{
 					playerPosition.X -= turtleSpeed;
 					playerTo.Y = 0;
@@ -542,8 +545,7 @@ namespace RD_AAOW
 					}
 
 				// ВПРАВО
-				if (keyboardState.IsKeyDown (Keys.Right) /* Второе условие - условие выигрыша; здесь оно не требуется */
-					/*&& (PlayerTo.X != -1)*/)
+				if (keyboardState.IsKeyDown (Keys.Right))
 					{
 					playerPosition.X += turtleSpeed;
 					playerTo.Y = 0;
@@ -574,13 +576,6 @@ namespace RD_AAOW
 				for (int i = 0; i < stScoreLines.Length; i++)
 					stScoreLines[i] = values[i];
 				}
-
-			// Строки для отображения
-			/*string S1, S2 = String.Format (" Очки: {0,10:D} ", score);
-			if (isWorking)
-				S1 = String.Format (" УРОВЕНЬ {0,2:D} ", levelNumber + 1);
-			else
-				S1 = " ПАУЗА ";*/
 			string S00 = string.Format (stScoreLines[0], score);
 			string S01 = isWorking ? string.Format (stScoreLines[1], levelNumber + 1) : stScoreLines[2];
 
@@ -620,11 +615,7 @@ namespace RD_AAOW
 				for (int i = 0; i < stLevelLines.Length; i++)
 					stLevelLines[i] = values[i];
 				}
-
 			string S00 = string.Format (stLevelLines[0], levelNumber + 1);
-			/*string S1 = string.Format ("УРОВЕНЬ {0,2:D}", levelNumber + 1),
-					S2 = "Нажмите Пробел,",
-					S3 = "чтобы начать";*/
 
 			Vector2 V1 = new Vector2 ((BackBufferWidth - midFont.MeasureString (S00).X) / 2,
 						(BackBufferHeight - 180) / 2) + level.CameraPosition,
@@ -654,11 +645,6 @@ namespace RD_AAOW
 				for (int i = 0; i < stSuccessLines.Length; i++)
 					stSuccessLines[i] = values[i];
 				}
-
-			/*string S1 = "УРОВЕНЬ",
-					S2 = "ПРОЙДЕН!",
-					S3 = "Нажмите Пробел",
-					S4 = "для продолжения";*/
 
 			Vector2 V1 = new Vector2 ((BackBufferWidth - midFont.MeasureString (stSuccessLines[0]).X) / 2,
 						(BackBufferHeight - 180) / 2) + level.CameraPosition,
@@ -691,11 +677,6 @@ namespace RD_AAOW
 				for (int i = 0; i < stLoseLines.Length; i++)
 					stLoseLines[i] = values[i];
 				}
-
-			/*string S1 = "УРОВЕНЬ",
-					S2 = "НЕ ПРОЙДЕН!",
-					S3 = "Нажмите Пробел,",
-					S4 = "чтобы попробовать снова";*/
 
 			Vector2 V1 = new Vector2 ((BackBufferWidth - midFont.MeasureString (stLoseLines[0]).X) / 2,
 						(BackBufferHeight - 180) / 2) + level.CameraPosition,
@@ -730,19 +711,8 @@ namespace RD_AAOW
 				stStartLines[3] = ProgramDescription.AssemblyTitle;
 				}
 
-			/*string S1 = ProgramDescription.AssemblyTitle,
-					S2 = RDGenerics.AssemblyCopyright,
-					S6 = ProgramDescription.AssemblyLastUpdate,
-					S3 = "Нажмите Пробел для начала игры,\n",
-					S4 = "F1 для вывода справки",
-					S5 = "или Esc для выхода";*/
-
 			Vector2 V1 = new Vector2 ((BackBufferWidth - bigFont.MeasureString (stStartLines[3]).X) / 2,
 						120),
-					/*V2 = new Vector2 (BackBufferWidth - defFont.MeasureString (S6).X - 20,
-						BackBufferHeight - 70),
-					V6 = new Vector2 (BackBufferWidth - defFont.MeasureString (S6).X - 20,
-						BackBufferHeight - 40),*/
 					V3 = new Vector2 ((BackBufferWidth - defFont.MeasureString (stStartLines[0]).X) / 2,
 						BackBufferHeight / 2),
 					V4 = new Vector2 ((BackBufferWidth - defFont.MeasureString (stStartLines[1]).X) / 2,
@@ -752,8 +722,6 @@ namespace RD_AAOW
 
 			spriteBatch.Draw (startBack, Vector2.Zero, TurtleGameColors.White);
 			DrawShadowedString (bigFont, stStartLines[3], V1, TurtleGameColors.Orange);
-			/*DrawShadowedString (defFont, S2, V2, TurtleGameColors.Yellow);
-			DrawShadowedString (defFont, S6, V6, TurtleGameColors.Yellow);*/
 			DrawShadowedString (defFont, stStartLines[0], V3, TurtleGameColors.White);
 			DrawShadowedString (defFont, stStartLines[1], V4, TurtleGameColors.White);
 			DrawShadowedString (defFont, stStartLines[2], V5, TurtleGameColors.White);
@@ -773,10 +741,6 @@ namespace RD_AAOW
 				for (int i = 0; i < stFinishLines.Length; i++)
 					stFinishLines[i] = values[i];
 				}
-
-			/*string S1 = "ВЫ ПОБЕДИЛИ!!!",
-					S2 = string.Format ("Ваш выигрыш: {0,10:D} очков", score),
-					S3 = "Нажмите Пробел для продолжения";*/
 			string S01 = string.Format (stFinishLines[1], score);
 
 			Vector2 V1 = new Vector2 ((BackBufferWidth - bigFont.MeasureString (stFinishLines[0]).X) / 2,
@@ -788,7 +752,7 @@ namespace RD_AAOW
 
 			spriteBatch.Draw (startBack, Vector2.Zero, TurtleGameColors.White);
 			spriteBatch.DrawString (bigFont, stFinishLines[0], V1, TurtleGameColors.Orange);
-			spriteBatch.DrawString (midFont, S01, V2, TurtleGameColors.Red);
+			spriteBatch.DrawString (midFont, S01, V2, TurtleGameColors.Yellow);
 			spriteBatch.DrawString (defFont, stFinishLines[2], V3, TurtleGameColors.DBlue);
 			}
 		private string[] stFinishLines = new string[3];
@@ -806,11 +770,6 @@ namespace RD_AAOW
 				for (int i = 0; i < stExitLines.Length; i++)
 					stExitLines[i] = values[i];
 				}
-
-			/*string S1 = "Вы действительно хотите",
-					S2 = "завершить игру?",
-					S3 = "Нажмите Y, чтобы выйти из игры,",
-					S4 = "или N, чтобы вернуться";*/
 
 			Vector2 V1 = new Vector2 ((BackBufferWidth - midFont.MeasureString (stExitLines[0]).X) / 2,
 						(BackBufferHeight - 180) / 2) + level.CameraPosition,
@@ -856,44 +815,6 @@ namespace RD_AAOW
 			showingServiceMessage = false;
 			}
 		private bool showingServiceMessage = false;
-
-		/*
-		/// <summary>
-		/// Отображение справки
-		/// </summary>
-		private void ShowHelpMessage ()
-			{
-			string S1 = "Правила игры",
-					S2 = "   В игре необходимо всего лишь перевести черепашку через дорогу и не\n" +
-						 "попасть под проезжающие автомобили. Скорость и количество автомобилей\n" +
-						 "будут расти с каждым уровнем. Проходя уровень, можно собирать листья,\n" +
-						 "которые будут приносить разное количество очков. Пройдя игру, можно\n" +
-						 "начать её заново с уже набранными очками",
-					S3 = "Удачи!!!",
-					S4 = "Управление",
-					S5 = "Пробел - пауза / возобновление / начало игры         S - включение / выключение звука\n" +
-						 "Стрелки - управление черепашкой                            M - включение / выключение музыки\n" +
-						 "Esc - выход из игры / из справки";
-
-			Vector2 V1 = new Vector2 ((BackBufferWidth - midFont.MeasureString (S1).X) / 2,
-						BackBufferHeight / 2 - 290),
-					V2 = new Vector2 ((BackBufferWidth - defFont.MeasureString (S2).X) / 2,
-						BackBufferHeight / 2 - 240),
-					V3 = new Vector2 ((BackBufferWidth - defFont.MeasureString (S3).X) / 2,
-						BackBufferHeight / 2 - 120),
-					V4 = new Vector2 ((BackBufferWidth - midFont.MeasureString (S4).X) / 2,
-						BackBufferHeight / 2 - 60),
-					V5 = new Vector2 ((BackBufferWidth - defFont.MeasureString (S5).X) / 2,
-						BackBufferHeight / 2 - 10);
-
-			spriteBatch.Draw (startBack, Vector2.Zero, TurtleGameColors.White);
-			spriteBatch.DrawString (midFont, S1, V1, TurtleGameColors.White);
-			spriteBatch.DrawString (defFont, S2, V2, TurtleGameColors.White);
-			spriteBatch.DrawString (defFont, S3, V3, TurtleGameColors.White);
-			spriteBatch.DrawString (midFont, S4, V4, TurtleGameColors.White);
-			spriteBatch.DrawString (defFont, S5, V5, TurtleGameColors.White);
-			}
-		*/
 
 		/// <summary>
 		/// Метод отрисовывает уровень игры

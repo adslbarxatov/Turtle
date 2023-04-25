@@ -354,9 +354,6 @@ namespace RD_AAOW
 			ScrollCamera (VSpriteBatch.GraphicsDevice.Viewport, PlayerPosition);
 			Matrix cameraTransform = Matrix.CreateTranslation (-cameraPosition.X, -cameraPosition.Y, 0.0f);
 
-			// Изменение для XNA 4.0
-			/*spriteBatch.Begin (SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate,
-				SaveStateMode.None, cameraTransform);*/
 			VSpriteBatch.Begin (SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp,
 				DepthStencilState.None, RasterizerState.CullNone, null, cameraTransform);
 			}
@@ -364,7 +361,6 @@ namespace RD_AAOW
 		/// <summary>
 		/// Функция пересчёта камеры наблюдения
 		/// </summary>
-		/// <param name="VViewport"></param>
 		/// <param name="PlayerPosition">Позиция игрока</param>
 		private void ScrollCamera (Viewport VViewport, Vector2 PlayerPosition)
 			{

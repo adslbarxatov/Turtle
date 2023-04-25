@@ -1,5 +1,11 @@
 Turtle game: changes log
 
+Version 2.1.2:
+• App about form has been upgraded;
+• Links list for HypeHelp has been updated;
+• Fixed the updates downloader behavior in some rare conditions;
+• Fixed some minor bugs
+
 Version 2.1:
 • Game has been integrated into the FDL version control, localization
   and deployment systems;
