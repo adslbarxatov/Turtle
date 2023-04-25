@@ -3,7 +3,7 @@
 
 
 
-“Turtle” game – a sample project for MonoGame Framework
+Turtle minigame – a sample project for MonoGame Framework
 
 Игра «Черепашка» – учебный проект для MonoGame Framework
 
