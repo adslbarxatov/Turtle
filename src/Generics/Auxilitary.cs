@@ -99,6 +99,7 @@ namespace RD_AAOW
 		}
 
 #if RACES
+
 	/// <summary>
 	/// Класс-описатель отдельного автомобиля
 	/// </summary>
@@ -260,6 +261,7 @@ namespace RD_AAOW
 			enabled = VEnabled;
 			}
 		}
+
 #endif
 
 	/// <summary>
