@@ -78,7 +78,7 @@ namespace RD_AAOW
 			for (int i = 0; i < Pths.Length; i++)
 				if (!File.Exists (".\\Content\\Turtle\\" + Pths[i]))
 					{
-					RDGenerics.LocalizedMessageBox (RDMessageTypes.Error, "MissingFile");
+					RDGenerics.LocalizedMessageBox (RDMessageTypes.Error_Center, "MissingFile");
 					return;
 					}
 

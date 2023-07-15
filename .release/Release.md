@@ -1,4 +1,4 @@
-_Changes for v 2.1.7_:
-- Added UTF32 encoding;
-- The interface was adapted to Windows 10, incorrect window borders were fixed;
-- Cumulative updates have been applied
+_Changes for v 2.2_:
+- Rewritten settings operator: it should fix problems with requiring administrator rights;
+- Updated the interface of message boxes;
+- The interface was adapted to Windows 10, incorrect window borders were fixed
