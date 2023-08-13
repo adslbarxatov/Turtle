@@ -74,6 +74,9 @@ namespace RD_AAOW
 				return;
 			RDGenerics.ShowAbout (true);
 
+			// Контроль прав
+			bool _ = RDGenerics.IsRegistryAccessible;
+
 			// Выполнение проверки на наличие всех необходимых файлов
 			for (int i = 0; i < Pths.Length; i++)
 				if (!File.Exists (".\\Content\\Turtle\\" + Pths[i]))

@@ -182,7 +182,8 @@ namespace RD_AAOW
 			// «¿√–”« ¿ ƒŒœŒÀÕ»“≈À‹Õ€’ “≈ —“”–
 			messageBack = Content.Load<Texture2D> ("Messages/MessageBack");
 			startBack = Content.Load<Texture2D> ("Background/StartBack");
-			messageBackLeftTop = new Vector2 (BackBufferWidth - messageBack.Width, BackBufferHeight - messageBack.Height);
+			messageBackLeftTop = new Vector2 (BackBufferWidth - messageBack.Width,
+				BackBufferHeight - messageBack.Height);
 
 			// ◊“≈Õ»≈ Õ¿—“–Œ≈  » –≈«”À‹“¿“Œ¬ »√–€
 			GameSettings (false);
@@ -752,7 +753,7 @@ namespace RD_AAOW
 
 			spriteBatch.Draw (startBack, Vector2.Zero, TurtleGameColors.White);
 			spriteBatch.DrawString (bigFont, stFinishLines[0], V1, TurtleGameColors.Orange);
-			spriteBatch.DrawString (midFont, S01, V2, TurtleGameColors.Yellow);
+			spriteBatch.DrawString (midFont, S01, V2, TurtleGameColors.Blue);
 			spriteBatch.DrawString (defFont, stFinishLines[2], V3, TurtleGameColors.DBlue);
 			}
 		private string[] stFinishLines = new string[3];
