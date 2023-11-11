@@ -123,19 +123,6 @@
   <data name="FinishLines" xml:space="preserve">
     <value>YOU WON!!!	Your winnings: {0,10:D} points.	Press [Space] to continue</value>
   </data>
-  <data name="HelpText" xml:space="preserve">
-    <value>Rules:
-In the game, you just need to move the turtle across the road and not get hit by passing cars. The speed and number of cars will increase with each level. Passing the level, you can collect leaves that will bring a different number of points. After beating the game, you can start it again with already scored points.
-Good luck!
-
-Controls:
-[Space] – pause / resume / start game
-Arrows – movement on the field
-[Esc] – exit the game
-[S] – mute / unmute SFX
-[M] – turn on / off the music
-[L] – change the interface language</value>
-  </data>
   <data name="LevelLines" xml:space="preserve">
     <value>LEVEL {0,2:D}	Press [Space]	to start</value>
   </data>

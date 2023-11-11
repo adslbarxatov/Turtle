@@ -1,13 +1,22 @@
-# Turtle v 2.2.11
-> PCC: 0240E27CF432DF5F
+# Turtle
+
+## Description
+
+“Turtle” minigame – a sample project for MonoGame Framework.
+A detailed description of the app is available on [its own page](https://adslbarxatov.github.io/Turtle)
+
+&nbsp;
 
 
 
-Turtle minigame – a sample project for MonoGame Framework
+## Описание
 
-Игра «Черепашка» – учебный проект для MonoGame Framework
+Игра «Черепашка» – учебный проект для MonoGame Framework.
+Подробное описание приложения доступно на [отдельной странице](https://adslbarxatov.github.io/Turtle/ru)
 
-#
+&nbsp;
+
+
 
 ## Requirements / Требования
 
