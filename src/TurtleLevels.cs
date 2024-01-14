@@ -1,17 +1,17 @@
 namespace RD_AAOW
 	{
 	/// <summary>
-	/// Класс описывает уровни игры
+	/// РљР»Р°СЃСЃ РѕРїРёСЃС‹РІР°РµС‚ СѓСЂРѕРІРЅРё РёРіСЂС‹
 	/// </summary>
 	public class LevelData
 		{
 		/// <summary>
-		/// Число уровней
+		/// Р§РёСЃР»Рѕ СѓСЂРѕРІРЅРµР№
 		/// </summary>
 		public const int LevelsQuantity = 12;
 
 		/// <summary>
-		/// Максимальная скорость на уровне
+		/// РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ РЅР° СѓСЂРѕРІРЅРµ
 		/// </summary>
 		public int MaxSpeed
 			{
@@ -23,7 +23,7 @@ namespace RD_AAOW
 		private int maxSpeed;
 
 		/// <summary>
-		/// Максимальное число машин на полосе
+		/// РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ С‡РёСЃР»Рѕ РјР°С€РёРЅ РЅР° РїРѕР»РѕСЃРµ
 		/// </summary>
 		public int MaxLineCars
 			{
@@ -35,7 +35,7 @@ namespace RD_AAOW
 		private int maxLineCars;
 
 		/// <summary>
-		/// Максимальное количество объектов на уровне
+		/// РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РѕР±СЉРµРєС‚РѕРІ РЅР° СѓСЂРѕРІРЅРµ
 		/// </summary>
 		public int MaxLevelObjects
 			{
@@ -47,91 +47,91 @@ namespace RD_AAOW
 		private int maxLevelObjects;
 
 		/// <summary>
-		/// Конструктор. Запрашивает параметры уровня игры
+		/// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ. Р—Р°РїСЂР°С€РёРІР°РµС‚ РїР°СЂР°РјРµС‚СЂС‹ СѓСЂРѕРІРЅСЏ РёРіСЂС‹
 		/// </summary>
-		/// <param name="LevelNumber">Уровень игры</param>
+		/// <param name="LevelNumber">РЈСЂРѕРІРµРЅСЊ РёРіСЂС‹</param>
 		public LevelData (int LevelNumber)
 			{
 			switch (LevelNumber)
 				{
-				// Уровень 1
+				// РЈСЂРѕРІРµРЅСЊ 1
 				case (0):
 					maxSpeed = 1;
-					maxLineCars = 2;        // Количество машин на линии ограничено (не более 3-х)
+					maxLineCars = 2;        // РљРѕР»РёС‡РµСЃС‚РІРѕ РјР°С€РёРЅ РЅР° Р»РёРЅРёРё РѕРіСЂР°РЅРёС‡РµРЅРѕ (РЅРµ Р±РѕР»РµРµ 3-С…)
 					maxLevelObjects = 5;
 					break;
 
-				// Уровень 2
+				// РЈСЂРѕРІРµРЅСЊ 2
 				case (1):
 					maxSpeed = 2;
 					maxLineCars = 2;
 					maxLevelObjects = 10;
 					break;
 
-				// Уровень 3
+				// РЈСЂРѕРІРµРЅСЊ 3
 				case (2):
 					maxSpeed = 3;
 					maxLineCars = 2;
 					maxLevelObjects = 15;
 					break;
 
-				// Уровень 4
+				// РЈСЂРѕРІРµРЅСЊ 4
 				case (3):
 					maxSpeed = 4;
 					maxLineCars = 2;
 					maxLevelObjects = 20;
 					break;
 
-				// Уровень 5
+				// РЈСЂРѕРІРµРЅСЊ 5
 				case (4):
 					maxSpeed = 4;
 					maxLineCars = 3;
 					maxLevelObjects = 20;
 					break;
 
-				// Уровень 6
+				// РЈСЂРѕРІРµРЅСЊ 6
 				case (5):
 					maxSpeed = 4;
 					maxLineCars = 3;
 					maxLevelObjects = 30;
 					break;
 
-				// Уровень 7
+				// РЈСЂРѕРІРµРЅСЊ 7
 				case (6):
 					maxSpeed = 5;
 					maxLineCars = 3;
 					maxLevelObjects = 40;
 					break;
 
-				// Уровень 8
+				// РЈСЂРѕРІРµРЅСЊ 8
 				case (7):
 					maxSpeed = 6;
 					maxLineCars = 3;
 					maxLevelObjects = 50;
 					break;
 
-				// Уровень 9
+				// РЈСЂРѕРІРµРЅСЊ 9
 				case (8):
 					maxSpeed = 7;
 					maxLineCars = 3;
 					maxLevelObjects = 60;
 					break;
 
-				// Уровень 10
+				// РЈСЂРѕРІРµРЅСЊ 10
 				case (9):
 					maxSpeed = 7;
 					maxLineCars = 3;
 					maxLevelObjects = 70;
 					break;
 
-				// Уровень 11
+				// РЈСЂРѕРІРµРЅСЊ 11
 				case (10):
 					maxSpeed = 7;
 					maxLineCars = 3;
 					maxLevelObjects = 80;
 					break;
 
-				// Уровень 12
+				// РЈСЂРѕРІРµРЅСЊ 12
 				case (11):
 					maxSpeed = 8;
 					maxLineCars = 3;

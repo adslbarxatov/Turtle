@@ -4,24 +4,24 @@ using System.Windows.Forms;
 namespace RD_AAOW
 	{
 	/// <summary>
-	/// Класс описывает точку входа приложения
+	/// РљР»Р°СЃСЃ РѕРїРёСЃС‹РІР°РµС‚ С‚РѕС‡РєСѓ РІС…РѕРґР° РїСЂРёР»РѕР¶РµРЅРёСЏ
 	/// </summary>
 	public static class TurtleProgram
 		{
 		private static string[] Pths = {
-			// Все фоновые изображения
+			// Р’СЃРµ С„РѕРЅРѕРІС‹Рµ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
 			"Background\\Back.xnb",
 			"Background\\StartBack.xnb",
 
-			// Шрифты
+			// РЁСЂРёС„С‚С‹
 			"Font\\BigFont.xnb",
 			"Font\\DefFont.xnb",
 			"Font\\MidFont.xnb",
 
-			// Фоны сообщений
+			// Р¤РѕРЅС‹ СЃРѕРѕР±С‰РµРЅРёР№
 			"Messages\\MessageBack.xnb",
 
-			// Все мелодии
+			// Р’СЃРµ РјРµР»РѕРґРёРё
 			"Sounds\\Ate1.xnb",
 			"Sounds\\Completed.xnb",
 			"Sounds\\Failed.xnb",
@@ -33,7 +33,7 @@ namespace RD_AAOW
 			"Sounds\\SStop.xnb",
 			"Sounds\\SStart.xnb",
 
-			// Все tiles
+			// Р’СЃРµ tiles
 			"Tiles\\Car00.xnb",
 			"Tiles\\Car01.xnb",
 			"Tiles\\Car02.xnb",
@@ -52,38 +52,41 @@ namespace RD_AAOW
 			"Tiles\\Turtle.xnb"};
 
 		/// <summary>
-		/// Точка входа приложения
+		/// РўРѕС‡РєР° РІС…РѕРґР° РїСЂРёР»РѕР¶РµРЅРёСЏ
 		/// </summary>
-		/// <param name="args">Аргументы командной строки</param>
+		/// <param name="args">РђСЂРіСѓРјРµРЅС‚С‹ РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё</param>
 		public static void Main (string[] args)
 			{
-			// Инициализация
+			// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
 			Application.EnableVisualStyles ();
 			Application.SetCompatibleTextRenderingDefault (false);
 
-			// Контроль XPUN
-			if (!Localization.IsXPUNClassAcceptable)
+			// РљРѕРЅС‚СЂРѕР»СЊ XPUN
+			if (!RDLocale.IsXPUNClassAcceptable)
 				return;
 
-			// Проверка запуска единственной копии
+			// РџСЂРѕРІРµСЂРєР° Р·Р°РїСѓСЃРєР° РµРґРёРЅСЃС‚РІРµРЅРЅРѕР№ РєРѕРїРёРё
 			if (!RDGenerics.IsAppInstanceUnique (true))
 				return;
 
-			// Отображение справки и запроса на принятие Политики
+			// РћС‚РѕР±СЂР°Р¶РµРЅРёРµ СЃРїСЂР°РІРєРё Рё Р·Р°РїСЂРѕСЃР° РЅР° РїСЂРёРЅСЏС‚РёРµ РџРѕР»РёС‚РёРєРё
 			if (!RDGenerics.AcceptEULA ())
 				return;
 			RDGenerics.ShowAbout (true);
 
-			// Контроль прав
+			// РљРѕРЅС‚СЂРѕР»СЊ РїСЂР°РІ
 			bool _ = RDGenerics.IsRegistryAccessible;
 
-			// Выполнение проверки на наличие всех необходимых файлов
-			for (int i = 0; i < Pths.Length; i++)
+			// Р’С‹РїРѕР»РЅРµРЅРёРµ РїСЂРѕРІРµСЂРєРё РЅР° РЅР°Р»РёС‡РёРµ РІСЃРµС… РЅРµРѕР±С…РѕРґРёРјС‹С… С„Р°Р№Р»РѕРІ
+			/*for (int i = 0; i < Pths.Length; i++)
 				if (!File.Exists (".\\Content\\Turtle\\" + Pths[i]))
 					{
 					RDGenerics.LocalizedMessageBox (RDMessageTypes.Error_Center, "MissingFile");
 					return;
-					}
+					}*/
+			if (!RDGenerics.CheckLibraries (Pths, "Content\\" + ProgramDescription.AssemblyMainName +
+				"\\", true))
+				return;
 
 			using (TurtleGame game = new TurtleGame ())
 				game.Run ();
