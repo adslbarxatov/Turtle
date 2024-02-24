@@ -129,11 +129,6 @@
   <data name="LoseLines" xml:space="preserve">
     <value>УРОВЕНЬ	НЕ ПРОЙДЕН!	Нажмите [Пробел],	чтобы попробовать снова</value>
   </data>
-  <data name="MissingFile" xml:space="preserve">
-    <value>Отсутствует файл «{0:S}».
-
-Выполните повторную установку игры или обратитесь к разработчику</value>
-  </data>
   <data name="ScoreLines" xml:space="preserve">
     <value>Очки: {0,10:D}	УРОВЕНЬ {0,2:D}	ПАУЗА</value>
   </data>

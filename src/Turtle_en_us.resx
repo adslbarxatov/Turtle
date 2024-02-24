@@ -129,11 +129,6 @@
   <data name="LoseLines" xml:space="preserve">
     <value>LEVEL IS	FAILED!	Press [Space]	to try again</value>
   </data>
-  <data name="MissingFile" xml:space="preserve">
-    <value>Missing file “{0:S}”.
-
-Reinstall the game or contact the developer</value>
-  </data>
   <data name="ScoreLines" xml:space="preserve">
     <value>Points: {0,10:D}	LEVEL {0,2:D}	PAUSE</value>
   </data>
