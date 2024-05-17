@@ -75,7 +75,9 @@ namespace RD_AAOW
 			RDGenerics.ShowAbout (true);
 
 			// Контроль прав
-			bool _ = RDGenerics.IsRegistryAccessible;
+			/*bool _ = RDGenerics.IsRegistryAccessible;*/
+			if (!RDGenerics.AppHasAccessRights (true, true))
+				return;
 
 			// Выполнение проверки на наличие всех необходимых файлов
 			if (!RDGenerics.CheckLibraries (Pths, "Content\\" + ProgramDescription.AssemblyMainName +

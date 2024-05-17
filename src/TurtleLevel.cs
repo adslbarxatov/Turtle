@@ -291,7 +291,7 @@ namespace RD_AAOW
 			}
 		private Texture2D background;
 
-		private Random rnd = new Random ();
+		/*private Random rnd = new Random ();*/
 
 		/// <summary>
 		/// Позиция камеры наблюдения

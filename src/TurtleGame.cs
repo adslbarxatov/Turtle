@@ -17,11 +17,19 @@ namespace RD_AAOW
 		// ПЕРЕМЕННЫЕ
 
 		// Драйвера игры
-		private GraphicsDeviceManager graphics;             // Графика
-		private SpriteBatch spriteBatch;                    // Sprite-отрисовка
-		private KeyboardState keyboardState;                // Состояние клавиатуры
-		private SpriteFont defFont, midFont, bigFont;       // Шрифты
-		private Random rnd = new Random ();                 // ГСЧ
+
+		// Графика
+		private GraphicsDeviceManager graphics;
+
+		// Sprite-отрисовка
+		private SpriteBatch spriteBatch;
+
+		// Состояние клавиатуры
+		private KeyboardState keyboardState;
+
+		// Шрифты
+		private SpriteFont defFont, midFont, bigFont;
+		/*private Random rnd = new Random ();                 // ГСЧ*/
 
 		/// <summary>
 		/// Ширина окна
@@ -63,54 +71,100 @@ namespace RD_AAOW
 		// Начальный статус игры (статусы перечислены в Auxilitary.cs)
 
 		// Описатели уровня и окна сообщений
-		private TurtleLevel level;                          // Класс-описатель уровня
-		private int levelNumber = 0;                        // Номер текущего уровня
-		private Texture2D messageBack,                      // Фон сообщений
-						  startBack;                        // Фон на старте
+
+		// Класс-описатель уровня
+		private TurtleLevel level;
+
+		// Номер текущего уровня
+		private int levelNumber = 0;
+
+		// Фон сообщений
+		private Texture2D messageBack;
+
+		// Фон на старте
+		private Texture2D startBack;
 		private Vector2 messageBackLeftTop;
-		private const int turtleSpeed = 4;                  // Скорость черепахи
+
+		// Скорость черепахи
+		private const int turtleSpeed = 4;
 
 		// Текущая позиция черепахи и ее объекты анимации
-		private Vector2 playerPosition, playerTo;                   // Текущая позиция
-		private Animation playerAnimation, playerStayAnimation,     // Изображения анимации (движется, стоит, dead)
-						  deadAnimation;
-		private AnimationPlayer playerAnimator;                     // Объект-анимация
+
+		// Текущая позиция
+		private Vector2 playerPosition, playerTo;
+
+		// Изображения анимации (движется, стоит, dead)
+		private Animation playerAnimation, playerStayAnimation, deadAnimation;
+
+		// Объект-анимация
+		private AnimationPlayer playerAnimator;
 
 		// Текстуры машин и съедобных объектов
-		private Texture2D[] carTextures, eatableTextures;           // Массивы текстур
+
+		// Массивы текстур
+		private Texture2D[] carTextures, eatableTextures;
 
 		// Текущие состояния всех машин и съедобных объектов (положение, направление, текстура и т.д.) 
 		// (структурные классы описаны в Level.cs)
 
-		private List<CarState> carPosition = new List<CarState> ();
 		// List позиций всех машин на дороге
-		private List<EatableObjectState> eatable = new List<EatableObjectState> ();
+		private List<CarState> carPosition = new List<CarState> ();
+
 		// List позиций съедобных объектов
+		private List<EatableObjectState> eatable = new List<EatableObjectState> ();
 
 		// Звуковые эффекты и их параметры
-		private SoundEffect SCompleted, SFailed,            // Победа, поражение
-							SStart, SStop, SOnOff,          // Старт, пауза, звук off/on
-							SAte;                           // Съедение
-		private bool isSound = true, isMusic = true;        // Звук и музыка в игре on/off
+
+		// Победа, поражение
+		private SoundEffect SCompleted, SFailed;
+
+		// Старт, пауза, звук off/on
+		private SoundEffect SStart, SStop, SOnOff;
+
+		// Съедение
+		private SoundEffect SAte;
+
+		// Звук и музыка в игре on/off
+		private bool isSound = true, isMusic = true;
 
 		// Параметры Alive и Working
 		private bool isAlive = false, isWorking = false;
 
 		// Очки
-		private int score = 0;                              // Выигрыш
-		private const uint scoreMultiplier = 10;            // Множитель для очков
-		private const int penalty = 99;                     // Штраф за проигрыш
+
+		// Выигрыш
+		private int score = 0;
+
+		// Множитель для очков
+		private const uint scoreMultiplier = 10;
+
+		// Штраф за проигрыш
+		private const int penalty = 99;
 
 		// Флаги отображения сообщений
-		private bool showLevelMsg = false,      // Сообщение о начале уровня
-					 showLoseMsg = false,       // Сообщение о прохождении уровня
-					 showWinMsg = false,        // Сообщение о проигрыше
-					 showExitMsg = false;       // Подтверждение выхода
+
+		// Сообщение о начале уровня
+		private bool showLevelMsg = false;
+
+		// Сообщение о прохождении уровня
+		private bool showLoseMsg = false;
+
+		// Сообщение о проигрыше
+		private bool showWinMsg = false;
+
+		// Подтверждение выхода
+		private bool showExitMsg = false;
 
 		// Согласователи клавиатуры
-		private int kbdDelay = 1,               // Пауза в Update-итерациях перед следующим опросом клавиатуры
-					kbdDelayTimer;              // Таймер для delay
-		private const int kbdDefDelay = 25;     // Базовый delay при нажатии клавиши
+
+		// Пауза в Update-итерациях перед следующим опросом клавиатуры
+		private int kbdDelay = 1;
+
+		// Таймер для delay
+		private int kbdDelayTimer;
+
+		// Базовый delay при нажатии клавиши
+		private const int kbdDefDelay = 25;
 
 		/// <summary>
 		/// Конструктор. Формирует рабочую область и окно приложения
@@ -268,8 +322,8 @@ namespace RD_AAOW
 						// Звук
 						MediaPlayer.Stop ();
 						if (isSound)
-							SFailed.Play ((90 + rnd.Next (10)) * 0.01f,
-							(20 - rnd.Next (40)) * 0.01f,
+							SFailed.Play ((90 + RDGenerics.RND.Next (10)) * 0.01f,
+							(20 - RDGenerics.RND.Next (40)) * 0.01f,
 							(playerPosition.X - BackBufferWidth / 2.0f) / (BackBufferWidth / 2.0f));
 
 						// Переключение состояния игры
@@ -298,8 +352,8 @@ namespace RD_AAOW
 
 						// Звук
 						if (isSound)
-							SAte.Play ((90 + rnd.Next (10)) * 0.01f,
-							(20 - rnd.Next (40)) * 0.01f,
+							SAte.Play ((90 + RDGenerics.RND.Next (10)) * 0.01f,
+							(20 - RDGenerics.RND.Next (40)) * 0.01f,
 							(playerPosition.X - BackBufferWidth / 2.0f) / (BackBufferWidth / 2.0f));
 						}
 
@@ -1053,10 +1107,10 @@ namespace RD_AAOW
 			for (uint j = 0; j < TurtleGame.LinesQuantity; j++)
 				{
 				// Для одной полосы скорость всех машин одинакова
-				uint s = (uint)rnd.Next (1, LDt.MaxSpeed + 1);
+				uint s = (uint)RDGenerics.RND.Next (1, LDt.MaxSpeed + 1);
 				for (int i = 0; i < LDt.MaxLineCars; i++)
 					{
-					carPosition.Add (new CarState (rnd.Next (carTextures.Length), s, j));
+					carPosition.Add (new CarState (RDGenerics.RND.Next (carTextures.Length), s, j));
 
 					// Отступ между машинами
 					carPosition[carPosition.Count - 1].SetCurrentPosY (carPosition[carPosition.Count - 1].CurrentPosition.Y +
@@ -1067,9 +1121,10 @@ namespace RD_AAOW
 			// Съедобные объекты
 			for (uint i = 0; i < LDt.MaxLevelObjects; i++)
 				eatable.Add (new EatableObjectState (i % (uint)eatableTextures.Length,
-					new Vector2 (rnd.Next (RoadLeft, RoadRight), rnd.Next (playerAnimation.FrameWidth / 2,
+					new Vector2 (RDGenerics.RND.Next (RoadLeft, RoadRight),
+					RDGenerics.RND.Next (playerAnimation.FrameWidth / 2,
 					GameFieldBottom - playerAnimation.FrameWidth / 2)),
-					(float)rnd.Next ((int)(Math.PI * 2000.0)) / 1000.0f));
+					(float)RDGenerics.RND.Next ((int)(Math.PI * 2000.0)) / 1000.0f));
 			}
 		}
 	}
