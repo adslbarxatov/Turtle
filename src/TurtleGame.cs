@@ -29,7 +29,6 @@ namespace RD_AAOW
 
 		// Шрифты
 		private SpriteFont defFont, midFont, bigFont;
-		/*private Random rnd = new Random ();                 // ГСЧ*/
 
 		/// <summary>
 		/// Ширина окна
@@ -74,9 +73,6 @@ namespace RD_AAOW
 
 		// Класс-описатель уровня
 		private TurtleLevel level;
-
-		// Номер текущего уровня
-		private int levelNumber = 0;
 
 		// Фон сообщений
 		private Texture2D messageBack;
@@ -124,16 +120,10 @@ namespace RD_AAOW
 		// Съедение
 		private SoundEffect SAte;
 
-		// Звук и музыка в игре on/off
-		private bool isSound = true, isMusic = true;
-
 		// Параметры Alive и Working
 		private bool isAlive = false, isWorking = false;
 
 		// Очки
-
-		// Выигрыш
-		private int score = 0;
 
 		// Множитель для очков
 		private const uint scoreMultiplier = 10;
@@ -239,13 +229,13 @@ namespace RD_AAOW
 			messageBackLeftTop = new Vector2 (BackBufferWidth - messageBack.Width,
 				BackBufferHeight - messageBack.Height);
 
-			// ЧТЕНИЕ НАСТРОЕК И РЕЗУЛЬТАТОВ ИГРЫ
-			GameSettings (false);
-
 			// НАСТРОЙКА МУЗЫКИ
 			MediaPlayer.IsRepeating = true;
-			if (isMusic)
+			if (TurtleSettings.MusicEnabled > 0)
+				{
+				MediaPlayer.Volume = TurtleSettings.MusicVolume;
 				MediaPlayer.Play (Content.Load<Song> ("Sounds/Music2"));
+				}
 
 			// Инициализация
 			base.Initialize ();
@@ -286,8 +276,8 @@ namespace RD_AAOW
 						{
 						// Звук
 						MediaPlayer.Stop ();
-						if (isSound)
-							SCompleted.Play ();
+						if (TurtleSettings.SoundsEnabled > 0)
+							SCompleted.Play (TurtleSettings.SoundVolume, 0, 0);
 
 						// Отображение сообщения
 						showWinMsg = true;
@@ -321,21 +311,21 @@ namespace RD_AAOW
 						{
 						// Звук
 						MediaPlayer.Stop ();
-						if (isSound)
-							SFailed.Play ((90 + RDGenerics.RND.Next (10)) * 0.01f,
+						if (TurtleSettings.SoundsEnabled > 0)
+							SFailed.Play ((90 + RDGenerics.RND.Next (10)) * 0.01f * TurtleSettings.SoundVolume,
 							(20 - RDGenerics.RND.Next (40)) * 0.01f,
 							(playerPosition.X - BackBufferWidth / 2.0f) / (BackBufferWidth / 2.0f));
 
 						// Переключение состояния игры
 						isAlive = isWorking = false;
-						levelNumber--;
+						TurtleSettings.LevelNumber--;
 						playerAnimator.PlayAnimation (deadAnimation);
 
 						// Отображение сообщения
 						showLoseMsg = true;
 
 						// Пересчёт очков
-						score -= penalty;           // Размер штрафа
+						TurtleSettings.GameScore -= penalty;
 
 						// Перезапуск уровня произойдёт по нажатию клавиши Space
 						}
@@ -348,11 +338,11 @@ namespace RD_AAOW
 						eatable.RemoveAt ((int)k.X);
 
 						// Пересчёт очков
-						score += (int)((k.Y + 1.0f) * scoreMultiplier);
+						TurtleSettings.GameScore += (uint)((k.Y + 1.0f) * scoreMultiplier);
 
 						// Звук
-						if (isSound)
-							SAte.Play ((90 + RDGenerics.RND.Next (10)) * 0.01f,
+						if (TurtleSettings.SoundsEnabled > 0)
+							SAte.Play ((90 + RDGenerics.RND.Next (10)) * 0.01f * TurtleSettings.SoundVolume,
 							(20 - RDGenerics.RND.Next (40)) * 0.01f,
 							(playerPosition.X - BackBufferWidth / 2.0f) / (BackBufferWidth / 2.0f));
 						}
@@ -378,28 +368,30 @@ namespace RD_AAOW
 			// Настройки звука
 			if (!showExitMsg)
 				{
-				if (keyboardState.IsKeyDown (Keys.S))       // Sound on/off
+				// Sound on/off
+				if (keyboardState.IsKeyDown (Keys.S))
 					{
-					isSound = !isSound;
-					SOnOff.Play ();
+					TurtleSettings.SoundsEnabled++;
+					SOnOff.Play (TurtleSettings.SoundVolume, 0, 0);
 
 					// Была нажата клавиша
 					return true;
 					}
 
+				// Music on/off
 				if (keyboardState.IsKeyDown (Keys.M))
 					{
-					if (isMusic)                            // Music on/off
+					TurtleSettings.MusicEnabled++;
+					if (TurtleSettings.MusicEnabled == 0)
 						{
-						isMusic = false;
 						MediaPlayer.Stop ();
 						}
 					else
 						{
-						isMusic = true;
+						MediaPlayer.Volume = TurtleSettings.MusicVolume;
 						MediaPlayer.Play (Content.Load<Song> ("Sounds/Music1"));
 						}
-					SOnOff.Play ();
+					SOnOff.Play (TurtleSettings.SoundVolume, 0, 0);
 
 					return true;
 					}
@@ -437,7 +429,7 @@ namespace RD_AAOW
 						gameStatus = GameStatus.Playing;
 
 						// Загрузка уровня
-						levelNumber--;
+						TurtleSettings.LevelNumber--;
 						LoadNextLevel ();
 
 						return true;
@@ -464,22 +456,24 @@ namespace RD_AAOW
 					// Нажатие паузы и продолжения
 					if (!showExitMsg)           // Нельзя ничего делать, если появилось сообщение о выходе
 						{
-						if (isAlive && keyboardState.IsKeyDown (Keys.Space))    // Pause
+						if (isAlive && keyboardState.IsKeyDown (Keys.Space))
+						// Pause
 							{
 							if (isWorking)
 								{
 								isWorking = false;
 
-								if (isSound)
-									SStop.Play ();
+								if (TurtleSettings.SoundsEnabled > 0)
+									SStop.Play (TurtleSettings.SoundVolume, 0, 0);
 								}
-							else                                                // Continue
+							else
+							// Continue
 								{
 								showLevelMsg = false;
 								isWorking = true;
 
-								if (isSound)
-									SStart.Play ();
+								if (TurtleSettings.SoundsEnabled > 0)
+									SStart.Play (TurtleSettings.SoundVolume, 0, 0);
 								}
 
 							return true;
@@ -503,8 +497,8 @@ namespace RD_AAOW
 							showExitMsg = true;
 
 							// Звук
-							if (isSound)
-								SStart.Play ();
+							if (TurtleSettings.SoundsEnabled > 0)
+								SStart.Play (TurtleSettings.SoundVolume, 0, 0);
 
 							return true;
 							}
@@ -631,8 +625,8 @@ namespace RD_AAOW
 				for (int i = 0; i < stScoreLines.Length; i++)
 					stScoreLines[i] = values[i];
 				}
-			string S00 = string.Format (stScoreLines[0], score);
-			string S01 = isWorking ? string.Format (stScoreLines[1], levelNumber + 1) : stScoreLines[2];
+			string S00 = string.Format (stScoreLines[0], TurtleSettings.GameScore);
+			string S01 = isWorking ? string.Format (stScoreLines[1], TurtleSettings.LevelNumber + 1) : stScoreLines[2];
 
 			// Векторы позиций для отображения элементов, учитывающие смещение камеры наблюдения
 			Vector2 V1 = new Vector2 (12, 16) + level.CameraPosition,
@@ -644,12 +638,12 @@ namespace RD_AAOW
 			DrawShadowedString (midFont, S01, V2, TurtleGameColors.Yellow);
 
 			// Если есть музыка или звук, выводить соответствующий знак
-			if (isMusic)
+			if (TurtleSettings.MusicEnabled > 0)
 				DrawShadowedString (defFont, "[\x266B]", V3, TurtleGameColors.Yellow);
 			else
 				DrawShadowedString (defFont, "[\x266B]", V3, TurtleGameColors.Black);
 
-			if (isSound)
+			if (TurtleSettings.SoundsEnabled > 0)
 				DrawShadowedString (defFont, "[\x266A]", V4, TurtleGameColors.Yellow);
 			else
 				DrawShadowedString (defFont, "[\x266A]", V4, TurtleGameColors.Black);
@@ -670,7 +664,7 @@ namespace RD_AAOW
 				for (int i = 0; i < stLevelLines.Length; i++)
 					stLevelLines[i] = values[i];
 				}
-			string S00 = string.Format (stLevelLines[0], levelNumber + 1);
+			string S00 = string.Format (stLevelLines[0], TurtleSettings.LevelNumber + 1);
 
 			Vector2 V1 = new Vector2 ((BackBufferWidth - midFont.MeasureString (S00).X) / 2,
 						(BackBufferHeight - 180) / 2) + level.CameraPosition,
@@ -796,7 +790,7 @@ namespace RD_AAOW
 				for (int i = 0; i < stFinishLines.Length; i++)
 					stFinishLines[i] = values[i];
 				}
-			string S01 = string.Format (stFinishLines[1], score);
+			string S01 = string.Format (stFinishLines[1], TurtleSettings.GameScore);
 
 			Vector2 V1 = new Vector2 ((BackBufferWidth - bigFont.MeasureString (stFinishLines[0]).X) / 2,
 						(BackBufferHeight - 400) / 2),
@@ -966,22 +960,28 @@ namespace RD_AAOW
 
 			// Запуск фоновой мелодии
 			MediaPlayer.Stop ();
-			if (isMusic)
+			if (TurtleSettings.MusicEnabled > 0)
+				{
+				MediaPlayer.Volume = TurtleSettings.MusicVolume;
 				MediaPlayer.Play (Content.Load<Song> ("Sounds/Music1"));
+				}
 
 			// Поиск следующего имеющегося уровня
 			while (true)
 				{
 				// Поиск С АВТОСМЕЩЕНИЕМ НА СЛЕДУЮЩИЙ УРОВЕНЬ
-				++levelNumber;
-				if (levelNumber < LevelData.LevelsQuantity)
+				++TurtleSettings.LevelNumber;
+				if (TurtleSettings.LevelNumber < LevelData.LevelsQuantity)
 					break;
 
 				// Перезапуск с нулевого уровня в конце игры
-				levelNumber = -1;
+				TurtleSettings.LevelNumber = -1;
 				gameStatus = GameStatus.Finish;
-				if (isMusic)
+				if (TurtleSettings.MusicEnabled > 0)
+					{
+					MediaPlayer.Volume = TurtleSettings.MusicVolume;
 					MediaPlayer.Play (Content.Load<Song> ("Sounds/Music2"));
+					}
 				}
 
 			// Выгрузка предыдущего уровня и загрузка нового
@@ -1005,9 +1005,6 @@ namespace RD_AAOW
 			// Смена сообщения
 			showWinMsg = showLoseMsg = false;
 			showLevelMsg = true;
-
-			// Запись настроек и результатов игры (в зависимости от того, есть они или нет)
-			GameSettings (true);
 			}
 
 		/// <summary>
@@ -1068,40 +1065,12 @@ namespace RD_AAOW
 			}
 
 		/// <summary>
-		/// Метод выполняет чтение / сохранение настроек игры
-		/// </summary>
-		/// <param name="Write">Флаг режима записи настроек</param>
-		private void GameSettings (bool Write)
-			{
-			// Если требуется запись
-			if (Write)
-				{
-				RDGenerics.SetAppSettingsValue ("Level", levelNumber.ToString ());
-				RDGenerics.SetAppSettingsValue ("Score", score.ToString ());
-				RDGenerics.SetAppSettingsValue ("Music", isMusic.ToString ());
-				RDGenerics.SetAppSettingsValue ("Sound", isSound.ToString ());
-				}
-			// Если требуется чтение, и файл при этом существует
-			else
-				{
-				try
-					{
-					levelNumber = int.Parse (RDGenerics.GetAppSettingsValue ("Level"));
-					score = int.Parse (RDGenerics.GetAppSettingsValue ("Score"));
-					isMusic = bool.Parse (RDGenerics.GetAppSettingsValue ("Music"));
-					isSound = bool.Parse (RDGenerics.GetAppSettingsValue ("Sound"));
-					}
-				catch { }
-				}
-			}
-
-		/// <summary>
 		/// Метод генерирует новые объекты на поле игры
 		/// </summary>
 		private void GenerateLevelObjects ()
 			{
 			// Получение доступа к базе уровней
-			LevelData LDt = new LevelData (levelNumber);
+			LevelData LDt = new LevelData (TurtleSettings.LevelNumber);
 
 			// Машины
 			for (uint j = 0; j < TurtleGame.LinesQuantity; j++)

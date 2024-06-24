@@ -1,5 +1,9 @@
 Turtle game: changes log
 
+Version 2.4.2:
+• Implemented the volume control for sound and music;
+• XPUN update has been applied
+
 Version 2.4:
 • The application has been retargeted to .NET 8.0;
 • Some minor fixes have been applied;
