@@ -1,5 +1,3 @@
-_Changes for v 2.4.2_:
-- Implemented the volume control for sound and music;
-- XPUN update has been applied;
-- The application has been retargeted to `.NET 8.0`;
-- Some minor fixes have been applied
+_Changes for v 2.4.3_:
+- The “App about” interface has been updated;
+- Implemented the volume control for sound and music
