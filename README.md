@@ -6,6 +6,8 @@
 
 A detailed description of the app is available on [its own page](https://adslbarxatov.github.io/Turtle).
 
+:warning: ***This repository is no longer updated***
+
 ---
 
 *The product is distributed according to the [Application development policy](https://adslbarxatov.github.io/ADP).
@@ -20,6 +22,8 @@ By starting to work with this product, you fully agree with this Policy and acce
 Мини-игра «Черепашка» – учебный проект для MonoGame Framework.
 
 Подробное описание приложения доступно на [отдельной странице](https://adslbarxatov.github.io/Turtle/ru).
+
+:warning: ***Данный репозиторий более не обновляется***
 
 ---
 
